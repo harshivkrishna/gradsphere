@@ -1,8 +1,11 @@
 import React from 'react'
+import Profile from '../../Components/Profile/Profile'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <Profile/>
+    </div>
   )
 }
 
