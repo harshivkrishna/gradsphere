@@ -1,95 +1,91 @@
-import React from 'react'
-import './Profile.css'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './Profile.css';
+
 const Profile = () => {
+  const [user, setUser] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    portfolio: '',
+    linkedin: '',
+    github: '',
+    profileImage: '',
+    jobDetails: [],
+    codingProfiles: { leetcode: '', codechef: '', codeforces: '' }
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/profile')
+      .then(response => {
+        if (response.data.message === 'User not found') {
+          navigate('/editprofile');
+        } else {
+          setUser(response.data);
+        }
+      })
+      .catch(error => console.error('Error fetching profile:', error));
+  }, [navigate]);
+
   return (
     <div className='profile-container'>
-        <div className='profile-img-container'>
-            <img className='profile-img' src="/assets/profile.jpg" alt="" />
-            <div className='work-container'>
-            <h4 className='profile-title'>Work</h4>
-            <h6>Amazon - SDE Intern</h6>
-            <p>2 months intern at Amazon bengaluru.</p>
+      <div className='profile-img-container'>
+        <img
+          className='profile-img'
+          src={!user.profileImage ? `http://localhost:5000${user.profileImage}` : '/assets/profile.jpg'}
+          alt='Profile'
+          onError={(e) => e.target.src = '/default-profile.png'}
+        />
 
-            <h6>Amazon - SDE Intern</h6>
-            <p>2 months intern at Amazon bengaluru.</p>
+        <div className='work-container'>
+          <h4 className='profile-title'>Work</h4>
+          {user.jobDetails.length > 0 ? user.jobDetails.map((job, index) => (
+            <div key={index}>
+              <h6>{job.company} - {job.role}</h6>
+              <p>{job.description}</p>
             </div>
-            <div className='skills-container'>
-                <h4 className='profile-title'>Skills</h4>
-                <ul>
-                    <li>java</li>
-                    <li>C++</li>
-                    <li>HTML</li>
-                    <li>Tailwind css</li>
-                    <li>Javascript</li>
-                </ul>
-            </div>
+          )) : <p>No job details available</p>}
         </div>
-
-        <div className="description-container">
-            <a href="#">
-            <div className='edit-profile-container'>
-                <h6>Edit Profile</h6>
-                <i className='bx bx-edit-alt' ></i>
-            </div>
-            </a>
-            <h1>Jeremy Jose</h1>
-            <h4 className='role'>Full Stack Developer</h4>
-
-            <div className='rank-container'>
-                <h3>Rank : 3838/9022</h3>
-                <div className="star-rating-container">
-                <i className='bx bxs-star'></i>
-                <i className='bx bxs-star'></i>
-                <i className='bx bxs-star'></i>
-                <i className='bx bxs-star'></i>
-                <i className='bx bxs-star'></i>
-                </div>
-            </div>
-            <h4>Contact Information</h4>
-            <div className='info-parent-container'>
-            <div className='info-container'>
-                <h6>Phone  </h6>
-                <p>1234567890</p>
-            </div>
-            <div className='info-container'>
-                <h6>Email</h6>
-                <p>Sample@gmail.com</p>
-            </div>
-            <div className='info-container'>
-                <h6>Portfolio </h6>
-                <a href="#">https://myportfolio.com</a>
-            </div>
-            <div className='info-container'>
-                <h6>Linkedin </h6>
-                <a href="#">https://myportfolio.com</a>
-            </div>
-            <div className='info-container'>
-                <h6>Github  </h6>
-                <a href="#">https://myportfolio.com</a>
-            </div>
-            </div>
-                    <h4>Coding platform Profiles</h4>
-            <div className='coding-profile-container'>
-                <div className="code-profile-container">
-                    <h6>Leetcode  </h6>
-                    <a href="#">username</a>
-                </div>
-                <div className="code-profile-container">
-                    <h6>Codechef  </h6>
-                    <a href="#">username</a>
-                </div>
-                <div className="code-profile-container">
-                    <h6>GeeksforGeeks  </h6>
-                    <a href="#">username</a>
-                </div>
-                <div className="code-profile-container">
-                    <h6>CodeForces  </h6>
-                    <a href="#">username</a>
-                </div>
-            </div>
+        <div className='skills-container'>
+          <h4 className="profile-title">Skills</h4>
+          <ul>
+            <li>Java</li>
+            <li>C++</li>
+            <li>JavaScript</li>
+            <li>HTML</li>
+            <li>Python</li>
+            <li>Tailwind CSS</li>
+          </ul>
         </div>
+      </div>
+      <div className='description-container'>
+        <a href='/editprofile'>
+          <div className='edit-profile-container'>
+            <h6>Edit Profile</h6>
+            <i className='bx bx-edit-alt'></i>
+          </div>
+        </a>
+        <h1>{user.name || 'Your Name'}</h1>
+        <h4 className='role'>Full Stack Developer</h4>
+        <h4>Contact Information</h4>
+        <div className='info-parent-container'>
+          <div className='info-container'><h6>Phone</h6><p>{user.mobile || 'Not provided'}</p></div>
+          <div className='info-container'><h6>Email</h6><p>{user.email || 'Not provided'}</p></div>
+          <div className='info-container'><h6>Portfolio</h6><a href={user.portfolio || '#'}>{user.portfolio || 'Not provided'}</a></div>
+          <div className='info-container'><h6>LinkedIn</h6><a href={user.linkedin || '#'}>{user.linkedin || 'Not provided'}</a></div>
+          <div className='info-container'><h6>Github</h6><a href={user.github || '#'}>{user.github || 'Not provided'}</a></div>
+        </div>
+        <h4>Coding Profiles</h4>
+        <div className='info-parent-container'>
+          <div className='info-container'><h6>Leetcode</h6><a href={user.codingProfiles.leetcode ? `https://leetcode.com/${user.codingProfiles.leetcode}` : '#'}>{user.codingProfiles.leetcode || 'Not provided'}</a></div>
+          <div className='info-container'><h6>CodeChef</h6><a href={user.codingProfiles.codechef ? `https://www.codechef.com/users/${user.codingProfiles.codechef}` : '#'}>{user.codingProfiles.codechef || 'Not provided'}</a></div>
+          <div className='info-container'><h6>Codeforces</h6><a href={user.codingProfiles.codeforces ? `https://codeforces.com/profile/${user.codingProfiles.codeforces}` : '#'}>{user.codingProfiles.codeforces || 'Not provided'}</a></div>
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
