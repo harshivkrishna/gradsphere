@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/assets/uploads', express.static(path.join(__dirname, 'assets/uploads'))); // Fixed static path
 
 // MongoDB Connection
 mongoose.connect('mongodb://localhost:27017/profileDB', {
@@ -35,7 +35,7 @@ const Profile = mongoose.model('Profile', ProfileSchema);
 // Multer Storage Configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, 'assets/uploads/'); // Fixed relative path
   },
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -62,7 +62,7 @@ app.post('/api/profile', upload.single('profileImage'), async (req, res) => {
     const { name, email, mobile, portfolio, linkedin, github, jobDetails, codingProfiles } = req.body;
     
     let profile = await Profile.findOne();
-    const profileImage = req.file ? `/uploads/${req.file.filename}` : (profile ? profile.profileImage : '');
+    const profileImage = req.file ? `/assets/uploads/${req.file.filename}` : (profile ? profile.profileImage : '');
 
     if (!profile) {
       profile = new Profile({

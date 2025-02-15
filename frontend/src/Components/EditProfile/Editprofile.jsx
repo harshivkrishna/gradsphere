@@ -128,7 +128,7 @@ const EditProfile = () => {
             <input type='text' name='description' value={job.description} onChange={(e) => handleJobChange(index, e)} required />
           </div>
         ))}
-        <button type='button' onClick={addJob}>Add Job</button>
+        <button type='button' className='job-btn' onClick={addJob}>Add Job</button>
 
         <h4 className='input-title'>Coding Profiles</h4>
         <p className='warn-message'>*Enter the username only</p>

@@ -28,15 +28,15 @@ const Profile = () => {
       })
       .catch(error => console.error('Error fetching profile:', error));
   }, [navigate]);
-
+  console.log(user.profileImage);
+  console.log(`http://localhost:5000${user.profileImage}`)
   return (
     <div className='profile-container'>
       <div className='profile-img-container'>
         <img
           className='profile-img'
-          src={!user.profileImage ? `http://localhost:5000${user.profileImage}` : '/assets/profile.jpg'}
+          src={user.profileImage ? `http://localhost:5000${user.profileImage}` : '/assets/profile.jpg'}
           alt='Profile'
-          onError={(e) => e.target.src = '/default-profile.png'}
         />
 
         <div className='work-container'>
