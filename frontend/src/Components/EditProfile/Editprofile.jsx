@@ -83,7 +83,7 @@ const EditProfile = () => {
 
   return (
     <div className='edit-container'>
-      <h2>Edit Profile</h2>
+      <h1>Edit Profile</h1>
       <form onSubmit={handleSubmit} className='edit-input-box' encType="multipart/form-data">
         {/* Basic Info */}
         <h4 className='input-title'>Personal Information</h4>
@@ -156,7 +156,7 @@ const EditProfile = () => {
             </div>
           </div>
         ))}
-        <button type='button' onClick={addJobField}>+ Add Job</button>
+        <button type='button' className='job-btn'  onClick={addJobField}>+ Add Job</button>
 
         {/* Coding Profiles */}
         <h4 className='input-title'>Coding Profiles</h4>
@@ -175,11 +175,11 @@ const EditProfile = () => {
 
         {/* Profile Image */}
         <h4 className='input-title'>Profile Image</h4>
-        <div className='input-container'>
-          <input type='file' name='profileImage' accept='image/*' onChange={handleFileChange} />
+        <div className='input-profile-container'>
+          <input type='file' placeholder='Choose file' name='profileImage' accept='image/*' onChange={handleFileChange} />
         </div>
 
-        <button type='submit'>Save Profile</button>
+        <button type='submit' className='form-submit-btn'>Save Profile</button>
       </form>
     </div>
   );
