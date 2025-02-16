@@ -108,11 +108,11 @@ const EditProfile = () => {
         </div>
         <div className='input-container'>
           <label>Year</label>
-          <input type='number' name='year' value={formData.year} onChange={handleChange} required />
+          <input type='text'  maxLength={1} name='year' value={formData.year} onChange={handleChange} required />
         </div>
         <div className='input-container'>
           <label>Semester</label>
-          <input type='number' name='semester' value={formData.semester} onChange={handleChange} required />
+          <input type='text'  maxLength={1} name='semester' value={formData.semester} onChange={handleChange} required />
         </div>
         <div className='input-container'>
           <label>Roll No.</label>
@@ -120,7 +120,7 @@ const EditProfile = () => {
         </div>
         <div className='input-container'>
           <label>Section</label>
-          <input type='text' name='section' value={formData.section} onChange={handleChange} required />
+          <input type='text'  maxLength={1} name='section' value={formData.section} onChange={handleChange} required />
         </div>
 
         {/* Social Links */}

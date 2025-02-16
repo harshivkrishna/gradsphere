@@ -30,12 +30,12 @@
 }
 
 .profile-container .profile-title::after{
-    display: inline-block;
+    display: inline-flex;
     margin-bottom: -8px;
     margin-left: 5px;
     content: '';
     height: 1px;
-    width: 80%;
+    width: 90%;
     background-color: black;
     vertical-align: middle;
 }
