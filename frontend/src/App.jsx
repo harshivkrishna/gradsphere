@@ -1,19 +1,24 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Home from './Pages/Home/Home'
-import EditProfile from './Components/EditProfile/Editprofile'
-import Profile from './Components/Profile/Profile'
-
-const App = () => {
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import AuthForm from './Components/Auth/AuthForm';
+import StudentDashboard from './Components/StudentDashboard/StudentDashboard';
+import TeacherDashboard from './Components/TeacherDashboard/TeacherDashboard';
+import Profile from './Components/Profile/Profile';
+import { ToastContainer } from 'react-toastify';
+import Landing from './Pages/Landing/Landing';
+function App() {
   return (
-    <div>
-      <Routes>
-        <Route path='/' element={<Home></Home>}></Route>
-        <Route path='/profile' element={<Profile></Profile>}></Route>
-        <Route path='/editprofile' element={<EditProfile></EditProfile>}></Route>
-      </Routes>
-    </div>
-  )
+    <AuthProvider>
+      <ToastContainer autoClose={3000}/>
+        <Routes>
+          <Route path='/' element={<Landing/> } />
+          <Route path="/login" element={<AuthForm />} />
+          <Route path='/profile' element={<Profile/>}/>
+          <Route path="/studentdashboard" element={<StudentDashboard />} />
+          <Route path="/teacherdashboard" element={<TeacherDashboard />} />
+        </Routes>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
