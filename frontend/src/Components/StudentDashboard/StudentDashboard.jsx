@@ -1,57 +1,88 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, GraduationCap, Code2, FolderGit2, ClipboardList, UserCircle, Settings, LogOut, Menu, X, Bell, TrendingUp, Brain, ChevronRight as ChessKnight, Target } from 'lucide-react';
-import Chatbot from '../Chatbot/Chatbot';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+import Coding from "../coding-platforms/Coding";
+import {
+  LayoutDashboard,
+  GraduationCap,
+  Code2,
+  FolderGit2,
+  ClipboardList,
+  UserCircle,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  Bell,
+  TrendingUp,
+  Brain,
+  ChevronRight as ChessKnight,
+  Target,
+} from "lucide-react";
+import Chatbot from "../Chatbot/Chatbot";
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState("dashboard");
   const [showFeatureMenu, setShowFeatureMenu] = useState(false);
   const [notifications] = useState([
-    { id: 1, title: 'New Assignment', message: 'Database Design project due next week' },
-    { id: 2, title: 'Upcoming Contest', message: 'LeetCode Weekly Contest - Sunday 8:00 AM' },
-    { id: 3, title: 'Technical News', message: 'New AI Framework Released - Check it out!' }
+    {
+      id: 1,
+      title: "New Assignment",
+      message: "Database Design project due next week",
+    },
+    {
+      id: 2,
+      title: "Upcoming Contest",
+      message: "LeetCode Weekly Contest - Sunday 8:00 AM",
+    },
+    {
+      id: 3,
+      title: "Technical News",
+      message: "New AI Framework Released - Check it out!",
+    },
   ]);
 
   const features = [
     {
-      title: 'Aptitude Tests',
+      title: "Aptitude Tests",
       icon: Brain,
-      link: 'https://www.hackerrank.com/domains/tutorials/10-days-of-statistics'
+      link: "https://www.hackerrank.com/domains/tutorials/10-days-of-statistics",
     },
     {
-      title: 'Chess Challenges',
+      title: "Chess Challenges",
       icon: ChessKnight,
-      link: 'https://lichess.org/training'
+      link: "https://lichess.org/training",
     },
     {
-      title: 'Coding Challenges',
+      title: "Coding Challenges",
       icon: Code2,
-      link: 'https://leetcode.com/problemset/all/'
-    }
+      link: "https://leetcode.com/problemset/all/",
+    },
   ];
 
   const handleSignOut = async () => {
     await logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   const sidebarItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { id: 'academic', icon: GraduationCap, label: 'Academic Performance' },
-    { id: 'codeskills', icon: Code2, label: 'Code Skills' },
-    { id: 'projects', icon: FolderGit2, label: 'Project Profile' },
-    { id: 'assignments', icon: ClipboardList, label: 'Assignments & Work' },
-    { id: 'profile', icon: UserCircle, label: 'Profile' },
-    { id: 'settings', icon: Settings, label: 'Settings' },
+    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { id: "academic", icon: GraduationCap, label: "Academic Performance" },
+    { id: "codeskills", icon: Code2, label: "Code Skills" },
+    { id: "projects", icon: FolderGit2, label: "Project Profile" },
+    { id: "assignments", icon: ClipboardList, label: "Assignments & Work" },
+    { id: "profile", icon: UserCircle, label: "Profile" },
+    { id: "settings", icon: Settings, label: "Settings" },
   ];
 
   const renderDashboardContent = () => {
     switch (activeSection) {
-      case 'dashboard':
+      case "codeskills":
+        return <Coding />;
+      case "dashboard":
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -84,11 +115,16 @@ const StudentDashboard = () => {
             </div>
           </div>
         );
+
       default:
         return (
           <div className="bg-gradient-to-br from-blue-600 to-pink-500 rounded-lg p-6 text-white">
-            <h2 className="text-xl font-semibold mb-4 capitalize">{activeSection}</h2>
-            <p className="text-white/80">Content for {activeSection} will be implemented soon.</p>
+            <h2 className="text-xl font-semibold mb-4 capitalize">
+              {activeSection}
+            </h2>
+            <p className="text-white/80">
+              Content for {activeSection} will be implemented soon.
+            </p>
           </div>
         );
     }
@@ -107,10 +143,7 @@ const StudentDashboard = () => {
             <GraduationCap size={32} />
             <span className="text-xl font-bold">Gradsphere</span>
           </div>
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="lg:hidden"
-          >
+          <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden">
             <X size={24} />
           </button>
         </div>
@@ -122,8 +155,8 @@ const StudentDashboard = () => {
               onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
                 activeSection === item.id
-                  ? 'bg-gradient-to-r from-blue-600 to-pink-500 text-white'
-                  : 'text-gray-300 hover:bg-blue-800/50 hover:text-white'
+                  ? "bg-gradient-to-r from-blue-600 to-pink-500 text-white"
+                  : "text-gray-300 hover:bg-blue-800/50 hover:text-white"
               }`}
             >
               <item.icon size={20} />
@@ -142,7 +175,7 @@ const StudentDashboard = () => {
       </motion.div>
 
       {/* Main Content */}
-      <div className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+      <div className={`flex-1 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Top Bar */}
         <div className="bg-gradient-to-r from-blue-900 to-pink-900 shadow-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -166,7 +199,7 @@ const StudentDashboard = () => {
                   >
                     <Target size={24} />
                   </button>
-                  
+
                   {showFeatureMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
                       {features.map((feature) => (
@@ -191,7 +224,7 @@ const StudentDashboard = () => {
                   </span>
                 </div>
                 <span className="text-sm font-medium text-white">
-                  Welcome, {user?.name || 'Student'}
+                  Welcome, {user?.name || "Student"}
                 </span>
               </div>
             </div>
@@ -203,9 +236,7 @@ const StudentDashboard = () => {
           <div className="px-4 py-6 sm:px-0">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Main Content Area */}
-              <div className="lg:col-span-2">
-                {renderDashboardContent()}
-              </div>
+              <div className="lg:col-span-2">{renderDashboardContent()}</div>
 
               {/* Notifications Sidebar */}
               <div className="bg-gradient-to-br from-blue-800 to-pink-800 rounded-lg shadow-lg p-6">
@@ -222,7 +253,9 @@ const StudentDashboard = () => {
                       className="p-4 bg-white/10 rounded-lg text-white"
                     >
                       <h4 className="font-medium">{notification.title}</h4>
-                      <p className="text-sm text-white/80 mt-1">{notification.message}</p>
+                      <p className="text-sm text-white/80 mt-1">
+                        {notification.message}
+                      </p>
                     </div>
                   ))}
                 </div>
