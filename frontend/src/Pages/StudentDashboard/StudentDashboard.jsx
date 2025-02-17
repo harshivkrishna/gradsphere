@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
-import Coding from "../coding-platforms/Coding";
+import Coding from "../../Components/coding-platforms/Coding";
 import {
   LayoutDashboard,
   GraduationCap,
@@ -20,8 +20,10 @@ import {
   ChevronRight as ChessKnight,
   Target,
 } from "lucide-react";
-import Chatbot from "../Chatbot/Chatbot";
-import Profile from "../Profile/Profile";
+import Chatbot from "../../Components/Chatbot/Chatbot";
+import Profile from "../../Components/StudentDashboard/Profile/Profile";
+import AcademicPerformance from "../../Components/StudentDashboard/AcademicPerformance";
+import ProjectProfile from "../../Components/StudentDashboard/ProjectProfile";
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -81,10 +83,15 @@ const StudentDashboard = () => {
 
   const renderDashboardContent = () => {
     switch (activeSection) {
-      case "profile":
-        return <Profile />;
+      case "academic":
+        return <AcademicPerformance />;
       case "codeskills":
         return <Coding />;
+      case "profile":
+        return <Profile />;
+      case "projects":
+        return <ProjectProfile />;
+
       case "dashboard":
         return (
           <div className="space-y-6">
