@@ -5,12 +5,20 @@ import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AuthForm = () => {
+const AuthForm = ({setName,setEmail}) => {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [userType, setUserType] = useState('student');
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
   const [loading, setLoading] = useState(false);
+  const handleNameChange = (e) => {
+    setFormData({ ...formData, name: e.target.value })
+    setName(e.target.value);
+  }
+  const handleEmailChange = (e) => {
+    setFormData({ ...formData, email: e.target.value })
+    setEmail(e.target.value);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +26,7 @@ const AuthForm = () => {
       toast.warn('Please fill in all fields!', { position: 'top-right' });
       return;
     }
-
+    
     setLoading(true);
     try {
       if (isLogin) {
@@ -75,7 +83,7 @@ const AuthForm = () => {
                 type="text"
                 placeholder="Full Name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={handleNameChange}
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
               />
             </div>
@@ -87,7 +95,7 @@ const AuthForm = () => {
               type="text"
               placeholder="Email Address"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={handleEmailChange}
               className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
             />
           </div>

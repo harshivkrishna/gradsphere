@@ -2,11 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const path = require('path');
 
 const app = express();
-
-// Middleware
 app.use(express.json());
 app.use(cors());
 app.use('/assets/uploads', express.static(path.join(__dirname, 'assets/uploads')));
@@ -15,9 +15,16 @@ app.use('/assets/uploads', express.static(path.join(__dirname, 'assets/uploads')
 mongoose.connect('mongodb://localhost:27017/profileDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log('MongoDB connected')).catch(err => console.error(err));
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
 
-// Profile Schema with Department Info
+// User Schema
+const UserSchema = new mongoose.Schema({
+  email: String,
+  password: String,
+  role: String // 'student' or 'teacher'
+});
+
 const ProfileSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -28,8 +35,6 @@ const ProfileSchema = new mongoose.Schema({
   profileImage: String,
   jobDetails: [{ company: String, role: String, description: String }],
   codingProfiles: { leetcode: String, codechef: String, codeforces: String },
-
-  // New Fields for Department Information
   department: String,
   year: Number,
   semester: Number,
@@ -37,9 +42,10 @@ const ProfileSchema = new mongoose.Schema({
   section: String
 });
 
+const User = mongoose.model('User', UserSchema);
 const Profile = mongoose.model('Profile', ProfileSchema);
 
-// Multer Storage Configuration
+// 🔹 Multer Storage for Image Uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'assets/uploads/');
@@ -48,31 +54,56 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   }
 });
-
 const upload = multer({ storage });
 
-// Get Profile
-app.get('/api/profile', async (req, res) => {
+// 🔹 Register User
+app.post('/api/register', async (req, res) => {
   try {
-    const profile = await Profile.findOne();
-    if (!profile) return res.status(404).json({ message: 'User not found' });
+    const { email, password, role } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ email, password: hashedPassword, role });
+    await user.save();
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+// 🔹 Login User
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign({ email: user.email, role: user.role }, 'secretkey', { expiresIn: '1h' });
+    res.json({ token, role: user.role, email: user.email });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// 🔹 Get Profile
+app.get('/api/profile/:email', async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ email: req.params.email });
+    if (!profile) return res.status(404).json({ message: 'Profile not found' });
     res.json(profile);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Update Profile with Image Upload
+// 🔹 Update Profile
 app.post('/api/profile', upload.single('profileImage'), async (req, res) => {
   try {
-    const { 
-      name, email, mobile, portfolio, linkedin, github, 
-      jobDetails, codingProfiles, department, year, semester, rollNo, section 
-    } = req.body;
-    
-    let profile = await Profile.findOne();
-    const profileImage = req.file ? `/assets/uploads/${req.file.filename}` : (profile ? profile.profileImage : '');
+    const { name, email, mobile, portfolio, linkedin, github, jobDetails, codingProfiles, department, year, semester, rollNo, section } = req.body;
+
+    let profile = await Profile.findOne({ email });
+    const profileImage = req.file ? `/assets/uploads/${req.file.filename}` : profile?.profileImage;
 
     if (!profile) {
       profile = new Profile({
@@ -82,22 +113,7 @@ app.post('/api/profile', upload.single('profileImage'), async (req, res) => {
         department, year, semester, rollNo, section
       });
     } else {
-      profile.name = name;
-      profile.email = email;
-      profile.mobile = mobile;
-      profile.portfolio = portfolio;
-      profile.linkedin = linkedin;
-      profile.github = github;
-      profile.jobDetails = JSON.parse(jobDetails);
-      profile.codingProfiles = JSON.parse(codingProfiles);
-      if (req.file) profile.profileImage = profileImage;
-      
-      // Update Department Information
-      profile.department = department;
-      profile.year = year;
-      profile.semester = semester;
-      profile.rollNo = rollNo;
-      profile.section = section;
+      Object.assign(profile, { name, mobile, portfolio, linkedin, github, jobDetails: JSON.parse(jobDetails), codingProfiles: JSON.parse(codingProfiles), profileImage, department, year, semester, rollNo, section });
     }
 
     await profile.save();
