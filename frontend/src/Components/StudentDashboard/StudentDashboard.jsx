@@ -21,6 +21,7 @@ import {
   Target,
 } from "lucide-react";
 import Chatbot from "../Chatbot/Chatbot";
+import Profile from "../Profile/Profile";
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -80,6 +81,8 @@ const StudentDashboard = () => {
 
   const renderDashboardContent = () => {
     switch (activeSection) {
+      case "profile":
+        return <Profile />;
       case "codeskills":
         return <Coding />;
       case "dashboard":
