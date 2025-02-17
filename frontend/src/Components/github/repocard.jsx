@@ -34,7 +34,7 @@ function RepoCard({ username }) {
   }, [username]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center space-x-2">

@@ -3,7 +3,8 @@ import CodeChefDetails from "../codechef/CodeChefDetails";
 import { useParams } from "react-router";
 
 function CodeChef() {
-  const { username } = useParams();
+  const username = "keerthikumar27";
+  // const { username } = useParams();
   return <CodeChefDetails username={username} />;
 }
 

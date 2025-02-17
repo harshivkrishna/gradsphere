@@ -9,7 +9,8 @@ import { useParams } from "react-router";
 const API_BASE_URL = "https://alfa-leetcode-api.onrender.com";
 
 function LeetCode() {
-  const { username } = useParams();
+  const username = "keerthikumarcse";
+  // const { username } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -48,7 +49,7 @@ function LeetCode() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen w-full bg-gray-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8">
           LeetCode Profile Viewer

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import Coding from "../../Components/coding-platforms/Coding";
 import {
+  ChevronDown,
+  ChevronRight,
   LayoutDashboard,
   GraduationCap,
   Code2,
@@ -24,11 +26,17 @@ import Chatbot from "../../Components/Chatbot/Chatbot";
 import Profile from "../../Components/StudentDashboard/Profile/Profile";
 import AcademicPerformance from "../../Components/StudentDashboard/AcademicPerformance";
 import ProjectProfile from "../../Components/StudentDashboard/ProjectProfile";
+import LeetCode from "../../Components/coding-platforms/LeetCode";
+import CodeChef from "../../Components/coding-platforms/CodeChef";
+import GitHub from "../../Components/coding-platforms/Github";
+import Codeforces from "../../Components/coding-platforms/Codeforces";
+import CodeSkills from "../../Components/StudentDashboard/CodeSkills";
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [expandedItems, setExpandedItems] = useState({});
   const [showFeatureMenu, setShowFeatureMenu] = useState(false);
   const [notifications] = useState([
     {
@@ -74,19 +82,41 @@ const StudentDashboard = () => {
   const sidebarItems = [
     { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { id: "academic", icon: GraduationCap, label: "Academic Performance" },
-    { id: "codeskills", icon: Code2, label: "Code Skills" },
+    {
+      id: "codeskills",
+      icon: Code2,
+      label: "Code Skills",
+      subItems: [
+        { id: "leetcode", icon: Code2, label: "LeetCode" },
+        { id: "codechef", icon: Code2, label: "CodeChef" },
+        { id: "github", icon: FolderGit2, label: "GitHub" },
+        { id: "codeforces", icon: Code2, label: "Codeforces" },
+      ],
+    },
     { id: "projects", icon: FolderGit2, label: "Project Profile" },
     { id: "assignments", icon: ClipboardList, label: "Assignments & Work" },
     { id: "profile", icon: UserCircle, label: "Profile" },
     { id: "settings", icon: Settings, label: "Settings" },
   ];
 
+  const toggleSubItems = (itemId) => {
+    setExpandedItems((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
+  };
+
   const renderDashboardContent = () => {
     switch (activeSection) {
       case "academic":
         return <AcademicPerformance />;
       case "codeskills":
-        return <Coding />;
+        return <CodeSkills currentCodingPlatform={setActiveSection} />;
+      case "leetcode":
+        return <LeetCode />;
+      case "codechef":
+        return <CodeChef />;
+      case "github":
+        return <GitHub />;
+      case "codeforces":
+        return <Codeforces />;
       case "profile":
         return <Profile />;
       case "projects":
@@ -125,7 +155,7 @@ const StudentDashboard = () => {
             </div>
           </div>
         );
-        
+
       default:
         return (
           <div className="bg-gradient-to-br from-blue-600 to-pink-500 rounded-lg p-6 text-white">
@@ -160,18 +190,50 @@ const StudentDashboard = () => {
 
         <nav className="space-y-2">
           {sidebarItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
-                activeSection === item.id
-                  ? "bg-gradient-to-r from-blue-600 to-pink-500 text-white"
-                  : "text-gray-300 hover:bg-blue-800/50 hover:text-white"
-              }`}
-            >
-              <item.icon size={20} />
-              <span>{item.label}</span>
-            </button>
+            <div key={item.id}>
+              <button
+                onClick={() => {
+                  setActiveSection(item.id);
+                  if (item.subItems) {
+                    toggleSubItems(item.id);
+                  }
+                }}
+                className={`w-full flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition-all ${
+                  activeSection === item.id
+                    ? "bg-gradient-to-r from-blue-600 to-pink-500 text-white"
+                    : "text-gray-300 hover:bg-blue-800/50 hover:text-white"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon size={20} />
+                  <span>{item.label}</span>
+                </div>
+                {item.subItems &&
+                  (expandedItems[item.id] ? (
+                    <ChevronDown size={20} />
+                  ) : (
+                    <ChevronRight size={20} />
+                  ))}
+              </button>
+              {item.subItems && expandedItems[item.id] && (
+                <div className="ml-6 mt-2 space-y-2">
+                  {item.subItems.map((subItem) => (
+                    <button
+                      key={subItem.id}
+                      onClick={() => setActiveSection(subItem.id)}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all ${
+                        activeSection === subItem.id
+                          ? "bg-gradient-to-r from-blue-500 to-pink-400 text-white"
+                          : "text-gray-300 hover:bg-blue-700/50 hover:text-white"
+                      }`}
+                    >
+                      <subItem.icon size={18} />
+                      <span>{subItem.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
 
           <button

@@ -47,7 +47,7 @@ const CodeChefDetails = ({ username }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center bg-transparent">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
       </div>
     );
@@ -55,7 +55,7 @@ const CodeChefDetails = ({ username }) => {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-red-500">{error}</div>
       </div>
     );
