@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 import { Github, Calendar, Book } from "lucide-react";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 
-function RepoCard({ username }) {
+function RepoCard({ username, currentCodingPlatform }) {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,7 +36,15 @@ function RepoCard({ username }) {
 
   return (
     <div className="w-full min-h-screen bg-gray-50">
-      <div className="bg-white shadow-sm">
+      <button
+        onClick={() => {
+          currentCodingPlatform(() => "codeskills");
+        }}
+        className="mt-4 ml-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
+      >
+        Back
+      </button>
+      <div className="pl-4 my-4 bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center space-x-2">
             <Github className="w-8 h-8 text-gray-700" />

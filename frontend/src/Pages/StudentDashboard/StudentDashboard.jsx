@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
-import Coding from "../../Components/coding-platforms/Coding";
 import {
   ChevronDown,
   ChevronRight,
@@ -31,6 +30,7 @@ import CodeChef from "../../Components/coding-platforms/CodeChef";
 import GitHub from "../../Components/coding-platforms/Github";
 import Codeforces from "../../Components/coding-platforms/Codeforces";
 import CodeSkills from "../../Components/StudentDashboard/CodeSkills";
+import EditProfile from "../../Components/EditProfile/Editprofile";
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -110,17 +110,19 @@ const StudentDashboard = () => {
       case "codeskills":
         return <CodeSkills currentCodingPlatform={setActiveSection} />;
       case "leetcode":
-        return <LeetCode />;
+        return <LeetCode currentCodingPlatform={setActiveSection} />;
       case "codechef":
-        return <CodeChef />;
+        return <CodeChef currentCodingPlatform={setActiveSection} />;
       case "github":
-        return <GitHub />;
+        return <GitHub currentCodingPlatform={setActiveSection} />;
       case "codeforces":
-        return <Codeforces />;
-      case "profile":
-        return <Profile />;
+        return <Codeforces currentCodingPlatform={setActiveSection} />;
       case "projects":
         return <ProjectProfile />;
+      case "profile":
+        return <Profile currentSection={setActiveSection} />;
+      case "edit-profile":
+        return <EditProfile />;
 
       case "dashboard":
         return (

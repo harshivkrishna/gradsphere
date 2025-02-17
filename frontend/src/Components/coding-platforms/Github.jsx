@@ -1,11 +1,15 @@
-import React from "react";
+/* eslint-disable react/prop-types */
 import RepoCard from "../github/repocard";
-import { useParams } from "react-router";
 
-function GitHub() {
+function GitHub({ currentCodingPlatform }) {
   const username = "keerthikumar132005";
   // const { username } = useParams();
-  return <RepoCard username={username} />;
+  return (
+    <RepoCard
+      username={username}
+      currentCodingPlatform={currentCodingPlatform}
+    />
+  );
 }
 
 export default GitHub;

@@ -7,7 +7,7 @@ import {
   getUserStatus,
 } from "../../utils/codeforces/api";
 
-const UserProfile = ({ userName }) => {
+const UserProfile = ({ userName, currentCodingPlatform }) => {
   const [handle, setHandle] = useState(userName);
   const [userInfo, setUserInfo] = useState(null);
   const [ratingHistory, setRatingHistory] = useState([]);
@@ -57,16 +57,20 @@ const UserProfile = ({ userName }) => {
 
   if (error || !userInfo) {
     return (
-      <div className="w-full min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Error</h2>
-          <p className="text-gray-600">{error || "User not found"}</p>
-          {/* <Link
-            to="/"
-            className="text-blue-500 hover:text-blue-600 mt-4 inline-block"
-          >
-            Go back to search
-          </Link> */}
+      <div className=" w-full min-h-screen bg-gray-50">
+        <button
+          onClick={() => {
+            currentCodingPlatform(() => "codeskills");
+          }}
+          className="ml-3 mt-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
+        >
+          Back
+        </button>
+        <div className="w-full min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Error</h2>
+            <p className="text-gray-600">{error || "User not found"}</p>
+          </div>
         </div>
       </div>
     );
@@ -91,13 +95,14 @@ const UserProfile = ({ userName }) => {
   return (
     <div className="w-full min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* <Link
-          to="/"
-          className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-6"
+        <button
+          onClick={() => {
+            currentCodingPlatform(() => "codeskills");
+          }}
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
         >
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          Back to Search
-        </Link> */}
+          Back
+        </button>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Profile Card */}

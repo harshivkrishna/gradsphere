@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Star, TrendingUp, Trophy, Globe2, Flag } from "lucide-react";
@@ -13,7 +14,7 @@ import {
 } from "recharts";
 import HeatMap from "./HeatMap";
 
-const CodeChefDetails = ({ username }) => {
+const CodeChefDetails = ({ username, currentCodingPlatform }) => {
   // const { username } = useParams({ userName });
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -55,8 +56,18 @@ const CodeChefDetails = ({ username }) => {
 
   if (error || !data) {
     return (
-      <div className="w-full min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-red-500">{error}</div>
+      <div className="w-full min-h-screen bg-gray-50">
+        <button
+          onClick={() => {
+            currentCodingPlatform(() => "codeskills");
+          }}
+          className="mt-4 ml-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
+        >
+          Back
+        </button>
+        <div className="w-full min-h-screen  flex items-center justify-center">
+          <div className="text-red-500">{error}</div>
+        </div>
       </div>
     );
   }
@@ -109,6 +120,14 @@ const CodeChefDetails = ({ username }) => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
+        <button
+          onClick={() => {
+            currentCodingPlatform(() => "codeskills");
+          }}
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
+        >
+          Back
+        </button>
         {/* Profile Header */}
         <div className="bg-white rounded-xl shadow-md p-8">
           <div className="flex items-center space-x-6">

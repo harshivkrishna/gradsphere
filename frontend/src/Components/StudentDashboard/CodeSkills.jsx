@@ -13,7 +13,7 @@ const Button = ({ onClick, children }) => {
 
 const CodeSkills = ({ currentCodingPlatform }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+    <div className=" grid sm:grid-cols-2 grid-cols-1 gap-6 p-6  lg:grid-cols-2  ">
       {[
         {
           name: "LeetCode",
@@ -34,7 +34,7 @@ const CodeSkills = ({ currentCodingPlatform }) => {
       ].map((platform, index) => (
         <div
           key={index}
-          className="p-6 bg-gradient-to-r from-gray-100 to-gray-200 shadow-xl rounded-2xl transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+          className="w-full h-full p-6 bg-gradient-to-r from-gray-100 to-gray-200 shadow-xl rounded-2xl transform transition duration-300 hover:scale-105 hover:shadow-2xl"
         >
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-md">

@@ -8,7 +8,7 @@ import { useParams } from "react-router";
 
 const API_BASE_URL = "https://alfa-leetcode-api.onrender.com";
 
-function LeetCode() {
+function LeetCode({ currentCodingPlatform }) {
   const username = "keerthikumarcse";
   // const { username } = useParams();
   const [loading, setLoading] = useState(false);
@@ -47,10 +47,39 @@ function LeetCode() {
       setLoading(false);
     }
   };
+  if (error || solvedStats?.errors) {
+    return (
+      <div className=" w-full min-h-screen bg-gray-50">
+        <button
+          onClick={() => {
+            currentCodingPlatform(() => "codeskills");
+          }}
+          className="mt-4 ml-3 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
+        >
+          Back
+        </button>
+        <div className="w-full min-h-screen  flex items-center justify-center">
+          <div className="text-red-500">
+            {error
+              ? error
+              : "Failed to fetch user data. Please check the username and try again."}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gray-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
+        <button
+          onClick={() => {
+            currentCodingPlatform(() => "codeskills");
+          }}
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all"
+        >
+          Back
+        </button>
         <h1 className="text-3xl font-bold text-center mb-8">
           LeetCode Profile Viewer
         </h1>
