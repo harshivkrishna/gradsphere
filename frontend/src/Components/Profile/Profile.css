@@ -5,15 +5,18 @@
     padding: 40px 5%;
     margin-top: 50px;
     gap: 30px;
+    flex-direction: column;
+    color: white;
 }
 
-.profile-img-container{
+ .profile-img-container{
     flex-basis: 30%;
 }
 
 .description-container{
-    flex-basis: 70%;
-}
+    flex-basis: 90%;
+    width: 100%;
+} 
 
 .profile-img{
     height: 300px;
@@ -147,6 +150,6 @@
     align-items: center;
     font-size: 20px;
     font-family: 'Nunito Sans';
-    color: black;
+    
 }
 

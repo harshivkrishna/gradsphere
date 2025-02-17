@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { LayoutDashboard, GraduationCap, Code2, FolderGit2, ClipboardList, UserCircle, Settings, LogOut, Menu, X, Bell, TrendingUp, Brain, ChevronRight as ChessKnight, Target } from 'lucide-react';
 import Chatbot from '../Chatbot/Chatbot';
-const StudentDashboard = () => {
+import Profile from '../Profile/Profile';
+const StudentDashboard = ({name}) => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -84,6 +85,10 @@ const StudentDashboard = () => {
             </div>
           </div>
         );
+        case 'profile': 
+        return(
+            <Profile/>
+        )
       default:
         return (
           <div className="bg-gradient-to-br from-blue-600 to-pink-500 rounded-lg p-6 text-white">
@@ -191,7 +196,7 @@ const StudentDashboard = () => {
                   </span>
                 </div>
                 <span className="text-sm font-medium text-white">
-                  Welcome, {user?.name || 'Student'}
+                  Welcome, {name}
                 </span>
               </div>
             </div>
@@ -208,7 +213,7 @@ const StudentDashboard = () => {
               </div>
 
               {/* Notifications Sidebar */}
-              <div className="bg-gradient-to-br from-blue-800 to-pink-800 rounded-lg shadow-lg p-6">
+              <div className="bg-gradient-to-br h-fit from-blue-800 to-pink-800 rounded-lg shadow-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-white">
                     Notifications
