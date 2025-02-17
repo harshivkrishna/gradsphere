@@ -11,7 +11,10 @@ import GitHub from "./Components/coding-platforms/GitHub";
 import Codeforces from "./Components/coding-platforms/Codeforces";
 import CodeChef from "./Components/coding-platforms/CodeChef";
 import Editprofile from "./Components/EditProfile/Editprofile";
+import { useState } from 'react';
 function App() {
+  const [name,setName] = useState('');
+  const [email,setEmail] = useState('');
   return (
     <AuthProvider>
       <ToastContainer autoClose={3000} />

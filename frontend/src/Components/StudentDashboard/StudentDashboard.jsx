@@ -118,7 +118,7 @@ const StudentDashboard = () => {
             </div>
           </div>
         );
-
+        
       default:
         return (
           <div className="bg-gradient-to-br from-blue-600 to-pink-500 rounded-lg p-6 text-white">
@@ -242,7 +242,7 @@ const StudentDashboard = () => {
               <div className="lg:col-span-2">{renderDashboardContent()}</div>
 
               {/* Notifications Sidebar */}
-              <div className="bg-gradient-to-br from-blue-800 to-pink-800 rounded-lg shadow-lg p-6">
+              <div className="bg-gradient-to-br h-fit from-blue-800 to-pink-800 rounded-lg shadow-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-white">
                     Notifications

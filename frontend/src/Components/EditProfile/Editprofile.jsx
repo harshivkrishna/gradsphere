@@ -75,7 +75,7 @@ const EditProfile = () => {
       await axios.post('http://localhost:5000/api/profile', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      navigate('/profile');
+      navigate('/studentdashboard');
     } catch (error) {
       console.error('Error updating profile:', error);
     }
