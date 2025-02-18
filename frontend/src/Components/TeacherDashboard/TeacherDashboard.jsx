@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
 import {
   LayoutDashboard,
   Users,
@@ -20,43 +20,87 @@ import {
   BarChart2,
   Trophy,
   Brain,
-  AlertCircle
-} from 'lucide-react';
+  AlertCircle,
+} from "lucide-react";
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState("dashboard");
   const [editingStudent, setEditingStudent] = useState(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const handleSignOut = async () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = async () => {
     await logout();
-    navigate('/login');
+    navigate("/login");
+    setIsLogoutModalOpen(false);
+  };
+
+  const cancelLogout = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const LogoutConfirmationModal = ({ onConfirm, onCancel }) => {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-900 rounded-lg p-6 w-96">
+          <h2 className="text-xl font-semibold text-white mb-4">
+            Confirm Logout
+          </h2>
+          <p className="text-gray-400 mb-6">
+            Are you sure you want to sign out?
+          </p>
+          <div className="flex justify-end gap-4">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const sidebarItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { id: 'students', icon: Users, label: 'Students' },
-    { id: 'weaknesses', icon: AlertCircle, label: 'Student Weaknesses' },
-    { id: 'academic', icon: GraduationCap, label: 'Academic Performance' },
-    { id: 'codeskills', icon: Code2, label: 'Code Skills' },
-    { id: 'projects', icon: FolderGit2, label: 'Project Profile' },
-    { id: 'assignments', icon: ClipboardList, label: 'Assignments & Work' },
-    { id: 'events', icon: Calendar, label: 'Event Assigned' },
-    { id: 'profile', icon: UserCircle, label: 'Profile' },
-    { id: 'settings', icon: Settings, label: 'Settings' },
+    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { id: "students", icon: Users, label: "Students" },
+    { id: "weaknesses", icon: AlertCircle, label: "Student Weaknesses" },
+    { id: "academic", icon: GraduationCap, label: "Academic Performance" },
+    { id: "codeskills", icon: Code2, label: "Code Skills" },
+    { id: "projects", icon: FolderGit2, label: "Project Profile" },
+    { id: "assignments", icon: ClipboardList, label: "Assignments & Work" },
+    { id: "events", icon: Calendar, label: "Event Assigned" },
+    { id: "profile", icon: UserCircle, label: "Profile" },
+    { id: "settings", icon: Settings, label: "Settings" },
   ];
 
   const renderDashboardContent = () => {
     switch (activeSection) {
-      case 'weaknesses':
+      case "weaknesses":
         return (
           <div className="bg-gray-900 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Student Weaknesses Analysis</h2>
+            <h2 className="text-xl font-semibold text-white mb-6">
+              Student Weaknesses Analysis
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((student) => (
-                <div key={student} className="bg-gray-800 rounded-lg p-4 text-white">
+                <div
+                  key={student}
+                  className="bg-gray-800 rounded-lg p-4 text-white"
+                >
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="font-semibold">Student {student}</h3>
@@ -66,7 +110,9 @@ const TeacherDashboard = () => {
                   </div>
                   <div className="space-y-3">
                     <div>
-                      <p className="text-sm font-medium text-gray-300">Areas for Improvement:</p>
+                      <p className="text-sm font-medium text-gray-300">
+                        Areas for Improvement:
+                      </p>
                       <ul className="list-disc list-inside text-sm text-gray-400 mt-1">
                         <li>Algorithm Complexity Analysis</li>
                         <li>Database Optimization</li>
@@ -74,7 +120,9 @@ const TeacherDashboard = () => {
                       </ul>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-300">Recommended Actions:</p>
+                      <p className="text-sm font-medium text-gray-300">
+                        Recommended Actions:
+                      </p>
                       <ul className="list-disc list-inside text-sm text-gray-400 mt-1">
                         <li>Additional practice problems</li>
                         <li>One-on-one mentoring sessions</li>
@@ -88,11 +136,13 @@ const TeacherDashboard = () => {
           </div>
         );
 
-      case 'students':
+      case "students":
         return (
           <div className="bg-gray-900 rounded-lg p-6">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-white">Student Management</h2>
+              <h2 className="text-xl font-semibold text-white">
+                Student Management
+              </h2>
               <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
                 <PlusCircle size={20} />
                 Add Student
@@ -107,7 +157,7 @@ const TeacherDashboard = () => {
                       <p className="text-sm text-gray-400">Computer Science</p>
                       <p className="text-xs text-gray-500">Batch 2024</p>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setEditingStudent(i)}
                       className="text-gray-400 hover:text-purple-400 transition-colors"
                     >
@@ -117,29 +167,33 @@ const TeacherDashboard = () => {
                   {editingStudent === i ? (
                     <div className="mt-4 space-y-3">
                       <div>
-                        <label className="text-sm text-gray-400">DBMS Score</label>
-                        <input 
-                          type="number" 
+                        <label className="text-sm text-gray-400">
+                          DBMS Score
+                        </label>
+                        <input
+                          type="number"
                           className="w-full mt-1 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
                           defaultValue="85"
                         />
                       </div>
                       <div>
-                        <label className="text-sm text-gray-400">DSA Score</label>
-                        <input 
-                          type="number" 
+                        <label className="text-sm text-gray-400">
+                          DSA Score
+                        </label>
+                        <input
+                          type="number"
                           className="w-full mt-1 bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
                           defaultValue="92"
                         />
                       </div>
                       <div className="flex gap-2">
-                        <button 
+                        <button
                           onClick={() => setEditingStudent(null)}
                           className="flex-1 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
                         >
                           Save
                         </button>
-                        <button 
+                        <button
                           onClick={() => setEditingStudent(null)}
                           className="flex-1 bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
                         >
@@ -165,14 +219,16 @@ const TeacherDashboard = () => {
           </div>
         );
 
-      case 'dashboard':
+      case "dashboard":
       default:
         return (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Total Students</h3>
+                  <h3 className="text-lg font-semibold text-white">
+                    Total Students
+                  </h3>
                   <Users className="text-purple-400" />
                 </div>
                 <p className="text-3xl font-bold text-white">42</p>
@@ -181,7 +237,9 @@ const TeacherDashboard = () => {
 
               <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Assignments</h3>
+                  <h3 className="text-lg font-semibold text-white">
+                    Assignments
+                  </h3>
                   <ClipboardList className="text-purple-400" />
                 </div>
                 <p className="text-3xl font-bold text-white">8</p>
@@ -190,7 +248,9 @@ const TeacherDashboard = () => {
 
               <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Upcoming Events</h3>
+                  <h3 className="text-lg font-semibold text-white">
+                    Upcoming Events
+                  </h3>
                   <Calendar className="text-purple-400" />
                 </div>
                 <p className="text-3xl font-bold text-white">3</p>
@@ -200,7 +260,9 @@ const TeacherDashboard = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
-                <h3 className="text-lg font-semibold text-white mb-4">Recent Activities</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Recent Activities
+                </h3>
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-gray-800 rounded-lg">
@@ -208,7 +270,9 @@ const TeacherDashboard = () => {
                     </div>
                     <div>
                       <p className="font-medium text-white">Updated Marks</p>
-                      <p className="text-sm text-gray-400">Database Management Systems</p>
+                      <p className="text-sm text-gray-400">
+                        Database Management Systems
+                      </p>
                       <p className="text-xs text-gray-500">2 hours ago</p>
                     </div>
                   </div>
@@ -217,8 +281,12 @@ const TeacherDashboard = () => {
                       <PlusCircle className="text-purple-400" size={20} />
                     </div>
                     <div>
-                      <p className="font-medium text-white">New Assignment Added</p>
-                      <p className="text-sm text-gray-400">Web Development Project</p>
+                      <p className="font-medium text-white">
+                        New Assignment Added
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Web Development Project
+                      </p>
                       <p className="text-xs text-gray-500">5 hours ago</p>
                     </div>
                   </div>
@@ -226,7 +294,9 @@ const TeacherDashboard = () => {
               </div>
 
               <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
-                <h3 className="text-lg font-semibold text-white mb-4">Top Performers</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Top Performers
+                </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -259,13 +329,13 @@ const TeacherDashboard = () => {
         <div className="flex items-center justify-between mb-8">
           <motion.div
             className="flex items-center gap-2"
-            animate={{ 
+            animate={{
               rotate: [0, 10, -10, 0],
             }}
-            transition={{ 
+            transition={{
               duration: 2,
               repeat: Infinity,
-              repeatType: "reverse"
+              repeatType: "reverse",
             }}
           >
             <GraduationCap size={32} className="text-purple-400" />
@@ -286,8 +356,8 @@ const TeacherDashboard = () => {
               onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
                 activeSection === item.id
-                  ? 'bg-purple-600 text-white'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                  ? "bg-purple-600 text-white"
+                  : "text-gray-400 hover:bg-gray-800 hover:text-white"
               }`}
             >
               <item.icon size={20} />
@@ -306,7 +376,7 @@ const TeacherDashboard = () => {
       </motion.div>
 
       {/* Main Content */}
-      <div className={`flex-1 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+      <div className={`flex-1 ${isSidebarOpen ? "ml-64" : "ml-0"}`}>
         {/* Top Bar */}
         <div className="bg-gray-900 border-b border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -324,7 +394,7 @@ const TeacherDashboard = () => {
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-sm text-gray-400">
-                  Welcome, {user?.name || 'User'}
+                  Welcome, {user?.name || "User"}
                 </span>
               </div>
             </div>
@@ -333,11 +403,17 @@ const TeacherDashboard = () => {
 
         {/* Page Content */}
         <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            {renderDashboardContent()}
-          </div>
+          <div className="px-4 py-6 sm:px-0">{renderDashboardContent()}</div>
         </main>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <LogoutConfirmationModal
+          onConfirm={confirmLogout}
+          onCancel={cancelLogout}
+        />
+      )}
     </div>
   );
 };

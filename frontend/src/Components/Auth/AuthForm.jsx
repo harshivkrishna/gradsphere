@@ -18,7 +18,6 @@ const AuthForm = ({ setName }) => {
 
   const handleNameChange = (e) => {
     setFormData({ ...formData, name: e.target.value });
-    setName(e.target.value);
   };
 
   const handleEmailChange = (e) => {
@@ -42,7 +41,7 @@ const AuthForm = ({ setName }) => {
           formData.name,
           formData.email,
           formData.password,
-          userType
+          userType // Pass the selected role
         );
         toast.success("Account created successfully!", {
           position: "top-right",
@@ -73,28 +72,30 @@ const AuthForm = ({ setName }) => {
           </p>
         </div>
 
-        <div className="flex gap-6 mb-6">
-          <button
-            onClick={() => setUserType("teacher")}
-            className={`py-3 px-6 rounded-lg flex-1 transition-colors ${
-              userType === "teacher"
-                ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            Teacher
-          </button>
-          <button
-            onClick={() => setUserType("student")}
-            className={`py-3 px-6 rounded-lg flex-1 transition-colors ${
-              userType === "student"
-                ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            Student
-          </button>
-        </div>
+        {!isLogin && (
+          <div className="flex gap-6 mb-6">
+            <button
+              onClick={() => setUserType("teacher")}
+              className={`py-3 px-6 rounded-lg flex-1 transition-colors ${
+                userType === "teacher"
+                  ? "bg-gray-800 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Teacher
+            </button>
+            <button
+              onClick={() => setUserType("student")}
+              className={`py-3 px-6 rounded-lg flex-1 transition-colors ${
+                userType === "student"
+                  ? "bg-gray-800 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              Student
+            </button>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {!isLogin && (

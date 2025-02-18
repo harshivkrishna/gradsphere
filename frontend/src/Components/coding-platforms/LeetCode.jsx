@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 const API_BASE_URL = "https://alfa-leetcode-api.onrender.com";
 
 function LeetCode({ currentCodingPlatform }) {
-  const username = "keerthikumarcse";
+  const username = "harshivkrishna";
   // const { username } = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

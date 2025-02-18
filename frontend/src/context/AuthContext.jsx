@@ -45,7 +45,13 @@ export const AuthProvider = ({ children }) => {
 
       const userData = { uid: user.uid, email, name, role };
       storeUser(userData);
-      navigate(`/studentdashboard/${user.uid}`);
+
+      // Navigate based on role
+      if (role === "student") {
+        navigate(`/studentdashboard/${user.uid}`);
+      } else if (role === "teacher") {
+        navigate(`/teacherdashboard/${user.uid}`);
+      }
     } catch (error) {
       throw new Error(error.message);
     }
@@ -66,7 +72,13 @@ export const AuthProvider = ({ children }) => {
 
       const userData = { uid: user.uid, email, name, role };
       storeUser(userData);
-      navigate(`/studentdashboard/${user.uid}`);
+
+      // Navigate based on role
+      if (role === "student") {
+        navigate(`/studentdashboard/${user.uid}`);
+      } else if (role === "teacher") {
+        navigate(`/teacherdashboard/${user.uid}`);
+      }
     } catch (error) {
       throw new Error(error.message);
     }
