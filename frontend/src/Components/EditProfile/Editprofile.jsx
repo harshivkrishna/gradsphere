@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const EditProfile = () => {
+const EditProfile = ({ uid }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/profile")
+      .get(`http://localhost:5000/api/profile/${uid}`)
       .then((response) => {
         if (response.data) {
           setFormData(response.data);
@@ -81,9 +81,14 @@ const EditProfile = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/profile", formDataToSend, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await axios.post(
+        `http://localhost:5000/api/profile/${uid}`,
+        formDataToSend,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
       navigate("/studentdashboard");
     } catch (error) {
       console.error("Error updating profile:", error);

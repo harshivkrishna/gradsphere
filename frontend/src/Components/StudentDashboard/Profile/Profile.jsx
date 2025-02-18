@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Profile = ({ currentSection }) => {
+const Profile = ({ currentSection, uid }) => {
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -23,18 +23,19 @@ const Profile = ({ currentSection }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!uid) return;
     axios
-      .get("http://localhost:5000/api/profile")
+      .get(`http://localhost:5000/api/profile/${uid}`)
       .then((response) => {
-        if (response.data.message === "User not found") {
+        if (response.data.message === "Profile not found") {
           navigate("/editprofile");
         } else {
           setUser(response.data);
         }
       })
       .catch((error) => console.error("Error fetching profile:", error));
-  }, [navigate]);
-
+  }, [navigate, uid]);
+  console.log(user);
   return (
     <div className="min-h-screen bg-white p-8">
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">

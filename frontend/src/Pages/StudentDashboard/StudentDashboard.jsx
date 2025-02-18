@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -31,9 +31,11 @@ import GitHub from "../../Components/coding-platforms/Github";
 import Codeforces from "../../Components/coding-platforms/Codeforces";
 import CodeSkills from "../../Components/StudentDashboard/CodeSkills";
 import EditProfile from "../../Components/EditProfile/Editprofile";
+
 const StudentDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { uid } = useParams();
+  const { user, logout, isLogin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [expandedItems, setExpandedItems] = useState({});
@@ -73,6 +75,12 @@ const StudentDashboard = () => {
       link: "https://leetcode.com/problemset/all/",
     },
   ];
+
+  useEffect(() => {
+    if (!isLogin) {
+      navigate("/login"); // Redirect to login if not logged in
+    }
+  }, [isLogin, navigate]);
 
   const handleSignOut = async () => {
     await logout();
@@ -120,9 +128,9 @@ const StudentDashboard = () => {
       case "projects":
         return <ProjectProfile />;
       case "profile":
-        return <Profile currentSection={setActiveSection} />;
+        return <Profile currentSection={setActiveSection} uid={uid} />;
       case "edit-profile":
-        return <EditProfile />;
+        return <EditProfile uid={uid} />;
 
       case "dashboard":
         return (
