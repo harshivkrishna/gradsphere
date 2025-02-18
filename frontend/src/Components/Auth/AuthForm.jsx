@@ -5,6 +5,7 @@ import { Mail, Lock, User } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios"; // Import axios for API calls
 
 const AuthForm = ({ setName }) => {
   const { loginWithFirebase, register, isLogin, setIsLogin } = useAuth();
@@ -37,12 +38,25 @@ const AuthForm = ({ setName }) => {
         await loginWithFirebase(formData.email, formData.password);
         toast.success("Signed in successfully!", { position: "top-right" });
       } else {
-        await register(
+        // Register user with Firebase
+        const userCredential = await register(
           formData.name,
           formData.email,
           formData.password,
           userType // Pass the selected role
         );
+
+        // Get the Firebase UID
+        const uid = userCredential.user.uid;
+
+        // Call backend API to create a database entry
+        await axios.post("http://localhost:5000/api/register", {
+          uid,
+          email: formData.email,
+          name: formData.name,
+          role: userType,
+        });
+
         toast.success("Account created successfully!", {
           position: "top-right",
         });

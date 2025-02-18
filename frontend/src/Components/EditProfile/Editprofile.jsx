@@ -23,15 +23,17 @@ const EditProfile = ({ uid }) => {
   });
 
   useEffect(() => {
+    if (!uid) return; // Ensure `uid` is available
+
     axios
       .get(`http://localhost:5000/api/profile/${uid}`)
       .then((response) => {
         if (response.data) {
-          setFormData(response.data);
+          setFormData(response.data); // Initialize form data
         }
       })
       .catch((error) => console.error("Error fetching profile:", error));
-  }, []);
+  }, [uid]); // Add `uid` to the dependency array
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,10 +65,11 @@ const EditProfile = ({ uid }) => {
     e.preventDefault();
 
     const formDataToSend = new FormData();
+
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "jobDetails" || key === "codingProfiles") {
         formDataToSend.append(key, JSON.stringify(value));
-      } else {
+      } else if (value !== null && value !== undefined) {
         formDataToSend.append(key, value);
       }
     });
@@ -75,13 +78,12 @@ const EditProfile = ({ uid }) => {
       formDataToSend.append("profileImage", formData.profileImage);
     }
 
-    // Log FormData for debugging
     for (let [key, value] of formDataToSend.entries()) {
       console.log(key, value);
     }
 
     try {
-      await axios.post(
+      await axios.put(
         `http://localhost:5000/api/profile/${uid}`,
         formDataToSend,
         {

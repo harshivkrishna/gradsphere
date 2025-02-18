@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
@@ -25,11 +25,17 @@ import {
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, isLogin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [editingStudent, setEditingStudent] = useState(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // useEffect(() => {
+  //   if (!isLogin) {
+  //     navigate("/login");
+  //   }
+  // }, [isLogin, navigate]);
 
   const handleSignOut = async () => {
     setIsLogoutModalOpen(true);

@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import AuthForm from "./Components/Auth/AuthForm";
 import StudentDashboard from "./Pages/StudentDashboard/StudentDashboard";
-import TeacherDashboard from "./Components/TeacherDashboard/TeacherDashboard";
+import TeacherDashboard from "./Pages/TeacherDashboard/TeacherDashboard";
 import Profile from "./Components/StudentDashboard/Profile/Profile";
 import { ToastContainer } from "react-toastify";
 import Landing from "./Pages/Landing/Landing";

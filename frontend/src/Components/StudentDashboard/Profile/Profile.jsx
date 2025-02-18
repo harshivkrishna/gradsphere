@@ -28,14 +28,14 @@ const Profile = ({ currentSection, uid }) => {
       .get(`http://localhost:5000/api/profile/${uid}`)
       .then((response) => {
         if (response.data.message === "Profile not found") {
-          navigate("/editprofile");
+          navigate("/editprofile"); // Redirect if profile not found
         } else {
-          setUser(response.data);
+          setUser(response.data); // Set profile data in state
         }
       })
       .catch((error) => console.error("Error fetching profile:", error));
-  }, [navigate, uid]);
-  console.log(user);
+  }, [uid, navigate]); // Only `uid` is needed in the dependency array
+  // console.log(user);
   return (
     <div className="min-h-screen bg-white p-8">
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">

@@ -5,7 +5,6 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const path = require("path");
-require("dotenv").config();
 
 const app = express();
 app.use(express.json());
@@ -15,14 +14,13 @@ app.use(
   express.static(path.join(__dirname, "assets/uploads"))
 );
 
-// MongoDB Connection
+const uri =
+  "mongodb+srv://harshivkrishnam:jkI95zYgrsUZ7VVl@gradsphere.yv0fo.mongodb.net/?retryWrites=true&w=majority&appName=gradsphere";
+
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/profileDB", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error(err));
+  .connect(uri)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // User Schema
 const UserSchema = new mongoose.Schema({
@@ -53,7 +51,7 @@ const ProfileSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 const Profile = mongoose.model("Profile", ProfileSchema);
 
-// Multer Storage for Image Uploads
+// 🔹 Multer Storage for Image Uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "assets/uploads/");
@@ -65,35 +63,30 @@ const storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true);
-    } else {
-      cb(new Error("Only image files are allowed"));
-    }
-  },
-});
+const upload = multer({ storage });
 
-// Register User
+// 🔹 Register User
 app.post("/api/register", async (req, res) => {
   try {
-    const { uid, email, password, role } = req.body;
-    if (!uid || !email || !password || !role) {
-      return res.status(400).json({ message: "Missing required fields" });
+    const { uid, email, name, role } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ uid });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ uid, email, password: hashedPassword, role });
+
+    // Create new user
+    const user = new User({ uid, email, name, role });
     await user.save();
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Login User
+// 🔹 Login User
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -106,16 +99,16 @@ app.post("/api/login", async (req, res) => {
 
     const token = jwt.sign(
       { uid: user.uid, email: user.email, role: user.role },
-      process.env.JWT_SECRET || "secretkey",
+      "secretkey",
       { expiresIn: "1h" }
     );
-    res.json({ token, role: user.role, email: user.email });
+    res.json({ token, role: user.role, email: user.email, uid: user.uid });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Get Profile
+// 🔹 Get Profile
 app.get("/api/profile/:uid", async (req, res) => {
   try {
     const profile = await Profile.findOne({ uid: req.params.uid });
@@ -126,7 +119,7 @@ app.get("/api/profile/:uid", async (req, res) => {
   }
 });
 
-// Update Profile
+// 🔹 Update Profile
 app.put(
   "/api/profile/:uid",
   upload.single("profileImage"),
@@ -139,13 +132,13 @@ app.put(
         portfolio,
         linkedin,
         github,
-        jobDetails,
-        codingProfiles,
         department,
         year,
         semester,
         rollNo,
         section,
+        jobDetails,
+        codingProfiles,
       } = req.body;
 
       const { uid } = req.params;
@@ -157,7 +150,7 @@ app.put(
       }
 
       let jobDetailsParsed = [];
-      let codingProfilesParsed = [];
+      let codingProfilesParsed = {};
 
       try {
         if (jobDetails) jobDetailsParsed = JSON.parse(jobDetails);
@@ -202,7 +195,7 @@ app.put(
           jobDetails:
             jobDetailsParsed.length > 0 ? jobDetailsParsed : profile.jobDetails,
           codingProfiles:
-            codingProfilesParsed.length > 0
+            Object.keys(codingProfilesParsed).length > 0
               ? codingProfilesParsed
               : profile.codingProfiles,
           profileImage:
