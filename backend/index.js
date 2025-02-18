@@ -26,12 +26,14 @@ mongoose
 
 // User Schema
 const UserSchema = new mongoose.Schema({
+  uid: { type: String, unique: true },
   email: { type: String, unique: true },
   password: String,
   role: String, // 'student' or 'teacher'
 });
 
 const ProfileSchema = new mongoose.Schema({
+  uid: { type: String, unique: true },
   name: String,
   email: { type: String, unique: true },
   mobile: String,
@@ -51,7 +53,7 @@ const ProfileSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 const Profile = mongoose.model("Profile", ProfileSchema);
 
-// 🔹 Multer Storage for Image Uploads
+// Multer Storage for Image Uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "assets/uploads/");
@@ -75,15 +77,15 @@ const upload = multer({
   },
 });
 
-// 🔹 Register User
+// Register User
 app.post("/api/register", async (req, res) => {
   try {
-    const { email, password, role } = req.body;
-    if (!email || !password || !role) {
+    const { uid, email, password, role } = req.body;
+    if (!uid || !email || !password || !role) {
       return res.status(400).json({ message: "Missing required fields" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hashedPassword, role });
+    const user = new User({ uid, email, password: hashedPassword, role });
     await user.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
@@ -91,7 +93,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// 🔹 Login User
+// Login User
 app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -103,7 +105,7 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
-      { email: user.email, role: user.role },
+      { uid: user.uid, email: user.email, role: user.role },
       process.env.JWT_SECRET || "secretkey",
       { expiresIn: "1h" }
     );
@@ -113,10 +115,10 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// 🔹 Get Profile
-app.get("/api/profile/:email", async (req, res) => {
+// Get Profile
+app.get("/api/profile/:uid", async (req, res) => {
   try {
-    const profile = await Profile.findOne({ email: req.params.email });
+    const profile = await Profile.findOne({ uid: req.params.uid });
     if (!profile) return res.status(404).json({ message: "Profile not found" });
     res.json(profile);
   } catch (error) {
@@ -124,94 +126,103 @@ app.get("/api/profile/:email", async (req, res) => {
   }
 });
 
-// 🔹 Update Profile
-app.post("/api/profile", upload.single("profileImage"), async (req, res) => {
-  try {
-    console.log("Received request body:", req.body);
-    console.log("Received file:", req.file);
-
-    const {
-      name,
-      email,
-      mobile,
-      portfolio,
-      linkedin,
-      github,
-      jobDetails,
-      codingProfiles,
-      department,
-      year,
-      semester,
-      rollNo,
-      section,
-    } = req.body;
-
-    // Validate required fields
-    if (!name || !email) {
-      return res.status(400).json({ message: "Name and email are required" });
-    }
-
-    // Parse JSON fields
-    let jobDetailsParsed, codingProfilesParsed;
+// Update Profile
+app.put(
+  "/api/profile/:uid",
+  upload.single("profileImage"),
+  async (req, res) => {
     try {
-      jobDetailsParsed = JSON.parse(jobDetails);
-      codingProfilesParsed = JSON.parse(codingProfiles);
-    } catch (error) {
-      return res.status(400).json({
-        message: "Invalid JSON format in jobDetails or codingProfiles",
-      });
-    }
-
-    // Handle profile image
-    const profileImage = req.file
-      ? `/assets/uploads/${req.file.filename}`
-      : null;
-
-    // Find or create profile
-    let profile = await Profile.findOne({ email });
-    if (!profile) {
-      profile = new Profile({
+      const {
         name,
         email,
         mobile,
         portfolio,
         linkedin,
         github,
-        profileImage,
-        jobDetails: jobDetailsParsed,
-        codingProfiles: codingProfilesParsed,
+        jobDetails,
+        codingProfiles,
         department,
         year,
         semester,
         rollNo,
         section,
-      });
-    } else {
-      Object.assign(profile, {
-        name,
-        mobile,
-        portfolio,
-        linkedin,
-        github,
-        jobDetails: jobDetailsParsed,
-        codingProfiles: codingProfilesParsed,
-        profileImage: profileImage || profile.profileImage,
-        department,
-        year,
-        semester,
-        rollNo,
-        section,
-      });
-    }
+      } = req.body;
 
-    // Save profile
-    await profile.save();
-    res.json({ message: "Profile updated successfully", profile });
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).json({ error: error.message });
+      const { uid } = req.params;
+
+      if (!uid || !name || !email) {
+        return res
+          .status(400)
+          .json({ message: "UID, name, and email are required" });
+      }
+
+      let jobDetailsParsed = [];
+      let codingProfilesParsed = [];
+
+      try {
+        if (jobDetails) jobDetailsParsed = JSON.parse(jobDetails);
+        if (codingProfiles) codingProfilesParsed = JSON.parse(codingProfiles);
+      } catch (error) {
+        return res.status(400).json({
+          message: "Invalid JSON format in jobDetails or codingProfiles",
+        });
+      }
+
+      const profileImage = req.file
+        ? `/assets/uploads/${req.file.filename}`
+        : undefined;
+
+      let profile = await Profile.findOne({ uid });
+
+      if (!profile) {
+        profile = new Profile({
+          uid,
+          name,
+          email,
+          mobile,
+          portfolio,
+          linkedin,
+          github,
+          profileImage: profileImage || null,
+          jobDetails: jobDetailsParsed,
+          codingProfiles: codingProfilesParsed,
+          department,
+          year,
+          semester,
+          rollNo,
+          section,
+        });
+      } else {
+        Object.assign(profile, {
+          name,
+          mobile,
+          portfolio,
+          linkedin,
+          github,
+          jobDetails:
+            jobDetailsParsed.length > 0 ? jobDetailsParsed : profile.jobDetails,
+          codingProfiles:
+            codingProfilesParsed.length > 0
+              ? codingProfilesParsed
+              : profile.codingProfiles,
+          profileImage:
+            profileImage !== undefined ? profileImage : profile.profileImage,
+          department,
+          year,
+          semester,
+          rollNo,
+          section,
+        });
+      }
+
+      await profile.save();
+      res.json({ message: "Profile updated successfully", profile });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ error: error.message });
+    }
   }
-});
+);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
