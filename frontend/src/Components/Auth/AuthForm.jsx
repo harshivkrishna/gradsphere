@@ -14,6 +14,27 @@ const AuthForm = ({ setName }) => {
     password: "",
     name: "",
   });
+  const ProfileData = {
+    name: formData.name || "",
+    email: formData.email || "",
+    mobile: "",
+    portfolio: "",
+    linkedin: "",
+    github: "",
+    profileImage: "",
+    jobDetails: [],
+    codingProfiles: {
+      leetcode: "",
+      codechef: "",
+      codeforces: ""
+    },
+    department: "",
+    year: null,
+    semester: null,
+    rollNo: "",
+    section: ""
+  };
+
   const [loading, setLoading] = useState(false);
 
   const handleNameChange = (e) => {
@@ -29,6 +50,7 @@ const AuthForm = ({ setName }) => {
     e.preventDefault();
     if (!formData.email || !formData.password || (!isLogin && !formData.name)) {
       toast.warn("Please fill in all fields!", { position: "top-right" });
+
       return;
     }
 
@@ -37,6 +59,20 @@ const AuthForm = ({ setName }) => {
       if (isLogin) {
         await loginWithFirebase(formData.email, formData.password);
         toast.success("Signed in successfully!", { position: "top-right" });
+        // API CALL FOR PROFILE
+        try {
+          await axios.post(
+            `http://localhost:5000/api/profile`,
+            ProfileData,
+            {
+              headers: { "Content-Type": "multipart/form-data" },
+            }
+          );
+    
+          navigate("/studentdashboard");
+        } catch (error) {
+          console.error("Error updating profile:", error);
+        }
       } else {
         await register(
           formData.name,
